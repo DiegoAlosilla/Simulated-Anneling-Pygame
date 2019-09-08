@@ -1,4 +1,8 @@
-import sys, pygame, Ciudad, TourAdmin, Tour, SimulatedAnnealing
+import sys, pygame
+from Coordinates import Coordinates
+from PointsAdmin import PointsAdmin
+from SimulatedAnnealing import SimulatedAnnealing
+
 
 #Inicializamos pygame
 pygame.init()
@@ -17,14 +21,33 @@ pygame.display.set_caption("Simulated Anneling")
 backGround = pygame.image.load("resources/img/mapa.png")
 backGround = pygame.transform.scale(backGround,sizeBackGrounbd)
 
+#Creamos el arreglo de puntosAdmin
+pointsA = PointsAdmin()
+
 #Funcion para pintar ciculos
-def drawPints():
-    pygame.draw.circle(screen,(34,153,84,255),(x_mouse, y_mouse),5)
+def drawPoints():
+    coordinates = Coordinates(x_mouse, y_mouse)
+    pointsA.add_coordinates(coordinates)
+    for i in range(0,pointsA.get_size()):
+        pygame.draw.circle(screen,(34,153,84,255),Coordinates.get_coordinates(pointsA.get_coordinates(i)),7)
 
 #Función para pintar lineas
 #color = pygame.Color(70,80,150)
-#def drawLine():
-#    pygame.draw.line(screen,color,(),())
+def drawLine():
+    for i in range(1,pointsA.get_size()):
+
+        if pointsA.get_size() > 1:
+            temp = i-1
+            pygame.draw.line(screen,(34,153,84,255),Coordinates.get_coordinates(pointsA.get_coordinates(i)),
+            Coordinates.get_coordinates(pointsA.get_coordinates(temp)),
+            3)
+            #pygame.time.delay(1000)
+            if i == pointsA.get_size()-1 :
+                pygame.draw.line(screen,(34,153,84,255),Coordinates.get_coordinates(pointsA.get_coordinates(i)),
+                Coordinates.get_coordinates(pointsA.get_coordinates(0)),
+                3)
+                #pygame.time.delay(1000)
+
 
 #Comenzamos el bucle del juego
 run = True
@@ -39,8 +62,25 @@ while run:
                 #obtiene la posicion del mouse dobde se presiono
                 x_mouse,y_mouse=pygame.mouse.get_pos()
                 #dibuja un circulo en la posion
-                drawPints()
-                drawPints2()
+                drawPoints()
+            if event.button == 3:
+                #dibuja un circulo en la posion
+                screen.blit(backGround,(0,0))
+                drawLine()
+        #Evento con el que capturamos si se presiono un boton del teclado
+        if event.type == pygame.KEYDOWN:
+            #Aplicamos el algoritmo SimulatedAnnealing
+            if event.key == pygame.K_SPACE:
+                screen.blit(backGround,(0,0))
+                sa = SimulatedAnnealing(pointsA, 10000, 0.003)
+                sa.run()
+                for i in range(pointsA.get_size()):
+                    pointsA.set_coordinates(i,sa.get_points(i))
+                drawPoints()
+                drawLine()
+
+                pygame.display.flip()
+
         if event.type==pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -48,7 +88,7 @@ while run:
     pygame.display.update()
     #Pinto el fondo
     pygame.display.flip()
-    
+
 
 #Salgo de pygame
 pygame.quit()

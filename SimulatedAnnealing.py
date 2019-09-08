@@ -1,41 +1,46 @@
+import random
+import math
+from Points import Points
 class SimulatedAnnealing:
-    def __init__(self, destinos, temperatura_inicial, valocidad_enfriamiento):
-        self.tour_admin = destinos
-        self.tour = Tour(destinos)
-        self.tour.generar_tour()
-        self.el_mejor = self.tour
-        self.temperatura = temperatura_inicial
-        self.valocidad_enfriamiento = valocidad_enfriamiento
+    def __init__(self, destinations, temperature_inicial, cooling):
+        self.points_admin = destinations
+        self.points = Points(destinations)
+        self.points.generar_points()
+        self.better = self.points
+        self.temperature = temperature_inicial
+        self.cooling = cooling
 
-    def funcion_aceptacion(self, delta_energia):
+    def get_points(self,index):
+        return self.points[index]
+    def sussces_fun(self, delta_energia):
         if delta_energia < 0:
             return True
-        elif random.random() <= math.exp(-(delta_energia / self.temperatura)):
+        elif random.random() <= math.exp(-(delta_energia / self.temperature)):
             return True
         return False
 
-    def nuevo_tour(self):
-        tour_nuevo = Tour(self.tour_admin, self.tour)
+    def new_points(self):
+        points_new = Points(self.points_admin, self.points)
 
-        pos1 = random.randrange(self.tour.tour_tam())
-        pos2 = random.randrange(self.tour.tour_tam())
-        ciudad1 = tour_nuevo.get_city(pos1)
-        ciudad2 = tour_nuevo.get_city(pos2)
-        tour_nuevo.set_city(pos2, ciudad1)
-        tour_nuevo.set_city(pos1, ciudad2)
+        pos1 = random.randrange(self.points.get_size())
+        pos2 = random.randrange(self.points.get_size())
+        coordinates1 = points_new.get_coordinates(pos1)
+        coordinates2 = points_new.get_coordinates(pos2)
+        points_new.set_coordinates(pos2, coordinates1)
+        points_new.set_coordinates(pos1, coordinates2)
 
-        actual_energia = self.tour.get_distancia()
-        nueva_energia = tour_nuevo.get_distancia()
+        actual_energia = self.points.get_distance()
+        nueva_energia = points_new.get_distance()
         delta = nueva_energia - actual_energia
 
-        if self.funcion_aceptacion(delta):
-            self.tour = tour_nuevo
+        if self.sussces_fun(delta):
+            self.points = points_new
 
-        if tour_nuevo.get_distancia() < self.el_mejor.get_distancia():
-            self.el_mejor = tour_nuevo
-            print(tour_nuevo.get_distancia())
+        if points_new.get_distance() < self.better.get_distance():
+            self.better = points_new
+            print(points_new.get_distance())
 
     def run(self):
-        while self.temperatura > 1:
-            self.nuevo_tour()
-            self.temperatura *= 1 - self.valocidad_enfriamiento
+        while self.temperature > 1:
+            self.new_points()
+            self.temperature *= 1 - self.cooling
