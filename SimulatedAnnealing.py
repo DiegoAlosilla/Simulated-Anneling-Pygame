@@ -1,5 +1,6 @@
 import random
 import math
+import pygame
 from Points import Points
 class SimulatedAnnealing:
     def __init__(self, destinos, temperatura_inicial, valocidad_enfriamiento):
@@ -9,6 +10,7 @@ class SimulatedAnnealing:
             self.el_mejor = self.points
             self.temperatura = temperatura_inicial
             self.valocidad_enfriamiento = valocidad_enfriamiento
+
 
     def funcion_aceptacion(self, delta_energia):
         if delta_energia < 0:
@@ -36,7 +38,7 @@ class SimulatedAnnealing:
 
         if points_nuevo.get_distance() < self.el_mejor.get_distance():
             self.el_mejor = points_nuevo
-            print(points_nuevo.get_distance())
+    
 
     def run(self):
         while self.temperatura > 1:
