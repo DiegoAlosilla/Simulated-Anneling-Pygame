@@ -7,10 +7,7 @@ class Coordinates:
         self.y = y
     #Calcular la distancia entre dos puntos(Coordenadas)
     def distance(self, coordinates):
-        distanceX = (coordinates.x - self.x) * 40000 * math.cos((self.y + coordinates.y) * math.pi / 360) / 360
-        distanceY = (self.y - coordinates.y) * 40000 / 360
-        distance = math.sqrt((distanceX * distanceX) + (distanceY * distanceY))
-        return distance
+        return ((coordinates.x - self.x)**2 + (coordinates.x - self.x)**2)**(0.5)
 
     #Obtenemos las caoordenadas
     def get_x(coordinates):

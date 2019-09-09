@@ -2,45 +2,43 @@ import random
 import math
 from Points import Points
 class SimulatedAnnealing:
-    def __init__(self, destinations, temperature_inicial, cooling):
-        self.points_admin = destinations
-        self.points = Points(destinations)
-        self.points.generar_points()
-        self.better = self.points
-        self.temperature = temperature_inicial
-        self.cooling = cooling
+    def __init__(self, destinos, temperatura_inicial, valocidad_enfriamiento):
+            self.points_admin = destinos
+            self.points = Points(destinos)
+            self.points.generar_points()
+            self.el_mejor = self.points
+            self.temperatura = temperatura_inicial
+            self.valocidad_enfriamiento = valocidad_enfriamiento
 
-    def get_points(self,index):
-        return self.points[index]
-    def sussces_fun(self, delta_energia):
+    def funcion_aceptacion(self, delta_energia):
         if delta_energia < 0:
             return True
-        elif random.random() <= math.exp(-(delta_energia / self.temperature)):
+        elif random.random() <= math.exp(-(delta_energia / self.temperatura)):
             return True
         return False
 
-    def new_points(self):
-        points_new = Points(self.points_admin, self.points)
+    def nuevo_points(self):
+        points_nuevo = Points(self.points_admin, self.points)
 
-        pos1 = random.randrange(self.points.get_size())
-        pos2 = random.randrange(self.points.get_size())
-        coordinates1 = points_new.get_coordinates(pos1)
-        coordinates2 = points_new.get_coordinates(pos2)
-        points_new.set_coordinates(pos2, coordinates1)
-        points_new.set_coordinates(pos1, coordinates2)
+        pos1 = random.randrange(self.points.point_size())
+        pos2 = random.randrange(self.points.point_size())
+        ciudad1 = points_nuevo.get_coordinates(pos1)
+        ciudad2 = points_nuevo.get_coordinates(pos2)
+        points_nuevo.set_coordinates(pos2, ciudad1)
+        points_nuevo.set_coordinates(pos1, ciudad2)
 
         actual_energia = self.points.get_distance()
-        nueva_energia = points_new.get_distance()
+        nueva_energia = points_nuevo.get_distance()
         delta = nueva_energia - actual_energia
 
-        if self.sussces_fun(delta):
-            self.points = points_new
+        if self.funcion_aceptacion(delta):
+            self.points = points_nuevo
 
-        if points_new.get_distance() < self.better.get_distance():
-            self.better = points_new
-            print(points_new.get_distance())
+        if points_nuevo.get_distance() < self.el_mejor.get_distance():
+            self.el_mejor = points_nuevo
+            print(points_nuevo.get_distance())
 
     def run(self):
-        while self.temperature > 1:
-            self.new_points()
-            self.temperature *= 1 - self.cooling
+        while self.temperatura > 1:
+            self.nuevo_points()
+            self.temperatura *= 1 - self.valocidad_enfriamiento

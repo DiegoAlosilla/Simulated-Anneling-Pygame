@@ -15,7 +15,8 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Simulated Anneling")
 
 #Inicializamos el sonido de fondo
-#pygame.mixer.music.load("resources/img/mapa.png")
+pygame.mixer.music.load("resources/music/tema.mp3")
+pygame.mixer.music.play(-1)
 
 #Cambiamos el fondo de la ventana
 backGround = pygame.image.load("resources/img/mapa.png")
@@ -34,9 +35,8 @@ def drawPoints():
 #Función para pintar lineas
 #color = pygame.Color(70,80,150)
 def drawLine():
-    for i in range(1,pointsA.get_size()):
-
-        if pointsA.get_size() > 1:
+    if pointsA.get_size() > 1:
+        for i in range(1,pointsA.get_size()):
             temp = i-1
             pygame.draw.line(screen,(34,153,84,255),Coordinates.get_coordinates(pointsA.get_coordinates(i)),
             Coordinates.get_coordinates(pointsA.get_coordinates(temp)),
@@ -47,6 +47,7 @@ def drawLine():
                 Coordinates.get_coordinates(pointsA.get_coordinates(0)),
                 3)
                 #pygame.time.delay(1000)
+
 
 
 #Comenzamos el bucle del juego
@@ -62,24 +63,25 @@ while run:
                 #obtiene la posicion del mouse dobde se presiono
                 x_mouse,y_mouse=pygame.mouse.get_pos()
                 #dibuja un circulo en la posion
+                screen.blit(backGround,(0,0))
                 drawPoints()
             if event.button == 3:
                 #dibuja un circulo en la posion
                 screen.blit(backGround,(0,0))
                 drawLine()
+                drawPoints()
         #Evento con el que capturamos si se presiono un boton del teclado
         if event.type == pygame.KEYDOWN:
             #Aplicamos el algoritmo SimulatedAnnealing
             if event.key == pygame.K_SPACE:
-                screen.blit(backGround,(0,0))
-                sa = SimulatedAnnealing(pointsA, 10000, 0.003)
+
+                sa = SimulatedAnnealing(pointsA, temperatura_inicial=10000, valocidad_enfriamiento=0.003)
                 sa.run()
                 for i in range(pointsA.get_size()):
-                    pointsA.set_coordinates(i,sa.get_points(i))
+                    pointsA.set_coordinates(i,sa.points.get_coordinates(i))
+                screen.blit(backGround,(0,0))
                 drawPoints()
                 drawLine()
-
-                pygame.display.flip()
 
         if event.type==pygame.QUIT:
             pygame.quit()

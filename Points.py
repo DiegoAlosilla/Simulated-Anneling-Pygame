@@ -31,9 +31,9 @@ class Points:
     def get_distance(self):
         if self.distance == 0:
             points_distance = 0
-            for indice_point in range(0, self.get_size()):
+            for indice_point in range(0, self.point_size()):
                 point_inicio = self.get_coordinates(indice_point)
-                if indice_point + 1 < self.get_size():
+                if indice_point + 1 < self.point_size():
                     point_lelgada = self.get_coordinates(indice_point + 1)
                 else:
                     point_lelgada = self.get_coordinates(0)
@@ -42,5 +42,5 @@ class Points:
 
         return self.distance
 
-    def get_size(self):
+    def point_size(self):
         return len(self.points)
