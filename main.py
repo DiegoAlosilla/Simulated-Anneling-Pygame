@@ -6,8 +6,8 @@ from SimulatedAnnealing import SimulatedAnnealing
 
 #Inicializamos pygame
 pygame.init()
-size = (1600,900)
-sizeBackGrounbd = (1600,1000)
+size = (800,600)
+sizeBackGrounbd = (800,700)
 #Creamos una nueva ventana
 screen = pygame.display.set_mode(size)
 
@@ -104,10 +104,10 @@ while run:
         time = pygame.time.get_ticks()/1000
         if time_aux == time:
             time_aux+=1
-    screen.blit((fuente.render("Tiempo: "+str(time)+ " mseg",0,(240, 243, 244))),(100,700))
+    screen.blit((fuente.render("Tiempo: "+str(time)+ " mseg",0,(240, 243, 244))),(50,450))
     if flat:
-        screen.blit((fuente.render("Distancia: "+str(sa.points.get_distance())+ " Km",0,(240, 243, 244))),(100,740))
-    screen.blit((fuente.render("Clic para crear puntos(coordenadas) y Espacio para encotrar posibles rutas",0,(240, 243, 244))),(100,100))
+        screen.blit((fuente.render("Distancia: "+str(sa.points.get_distance())+ " Km",0,(240, 243, 244))),(50,480))
+    screen.blit((fuente.render("Clic para crear puntos (coordenadas) y Espacio para encotrar posibles rutas",0,(240, 243, 244))),(10,50))
     pygame.display.update()
     #Pinto el fondo
     pygame.display.flip()
